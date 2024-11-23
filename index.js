@@ -13,16 +13,25 @@ app.get('/test', (req, res) => {
 let jsonData = [];
 
 app.post('/addProducts', (req, res) => {
-  let bodyData = req.body;
-  jsonData.push(bodyData);
-
-  return res.status(200).send({
-    status: 200,
-    message: "Product added successfully !!",
-    data: bodyData,
-    error: false,
+    let bodyData = req.body;
+  
+    if (!bodyData || Object.keys(bodyData).length === 0) {
+      return res.status(400).send({
+        status: 400,
+        message: "Invalid request, body cannot be empty.",
+        error: true,
+      });
+    }
+  
+    jsonData.push(bodyData);
+  
+    return res.status(200).send({
+      status: 200,
+      message: "Product added successfully !!",
+      data: bodyData,
+      error: false,
+    });
   });
-})
 
 app.get('/getProducts', (req, res) => {  
     return res.status(200).send({
