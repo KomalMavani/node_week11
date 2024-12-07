@@ -1,27 +1,49 @@
-const express = require('express');
-const connectDB = require('./config/db');
+import express from 'express';
+
 const app = express();
-const userRoutes = require('./routes/userRoute')
-const patientRoutes = require('./routes/patientRoute')
-const testRoutes = require('./routes/testRoute')
-const swaggerJsDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
 
-const cors = require('cors');
-app.use(cors());
-// Connect to MongoDB
-connectDB();
-
-// Init Middleware
-app.use(express.json());
-
-// Define Routes
-app.use('/api/users',userRoutes);
-app.use('/api/patients', patientRoutes);
-app.use('/api/tests', testRoutes);
-app.get('/',(req ,res)=>{
-    res.send('Hello from the server!'); 
+app.get('/', (req, res) => {
+    res.send("Hello World");
 })
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.get('/test', (req, res) => {
+    res.send("Hello World test");
+})
+
+let jsonData = [];
+
+app.post('/addProducts', (req, res) => {
+    let bodyData = req.body;
+  
+    if (!bodyData || Object.keys(bodyData).length === 0) {
+      return res.status(400).send({
+        status: 400,
+        message: "Invalid request, body cannot be empty.",
+        error: true,
+      });
+    }
+  
+    jsonData.push(bodyData);
+  
+    return res.status(200).send({
+      status: 200,
+      message: "Product added successfully !!",
+      data: bodyData,
+      error: false,
+    });
+  });
+
+app.get('/getProducts', (req, res) => {  
+    return res.status(200).send({
+      status: 200,
+      message: "Get product list successfully !!",
+      data: jsonData,
+      error: false,
+    });
+})
+
+const PORT = 8080;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+})
